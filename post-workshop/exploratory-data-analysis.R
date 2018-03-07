@@ -22,6 +22,19 @@ region_import <- deposit_details %>%
   read_csv() %>%
   mutate(timestamp = as.Date(timestamp))
 
+region_import %>%
+  View()
+
+region_import %>%
+  filter(timestamp == max(timestamp)) %>%
+  group_by(country_group) %>%
+  summarise(total.jobs = sum(count)) %>%
+  ggplot(aes(x = fct_reorder(country_group, total.jobs),
+             y = total.jobs)) +
+  geom_col() +
+  coord_flip()
+
+
 
 ## ---- Network ----
 
@@ -38,3 +51,7 @@ got_igraph <- graph_from_data_frame(
 ) %>%
   simplify()
 
+got_igraph %>%
+  ggraph() +
+  geom_edge_fan() +
+  geom_node_point()

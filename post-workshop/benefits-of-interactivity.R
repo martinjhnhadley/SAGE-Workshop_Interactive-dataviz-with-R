@@ -18,6 +18,14 @@ region_import %>%
   arrange(desc(jobs.in.occupation)) %>%
   ungroup() %>%
   mutate(country_group = fct_reorder(country_group, jobs.in.occupation)) %>%
+  hchart(
+    type = "bar",
+    hcaes(
+      x = country_group,
+      y = jobs.in.occupation,
+      group = occupation
+    )
+  )
 
 
 ## ---- Network ----
@@ -42,4 +50,8 @@ got_igraph <- graph_from_data_frame(
   directed = FALSE
 ) %>%
   simplify()
+
+got_igraph %>%
+  visIgraph() %>%
+  visOptions(highlightNearest = TRUE)
 

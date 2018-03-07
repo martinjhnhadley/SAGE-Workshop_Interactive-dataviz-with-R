@@ -1,0 +1,53 @@
+---
+title: "SAGE Campus RMarkdown"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# ggplot
+
+Static chart!
+
+```{r}
+library("tidyverse")
+library("rfigshare")
+library("ggraph")
+library("tidygraph")
+library("igraph")
+library("RColorBrewer")
+
+```
+
+# Network
+
+Interactive network
+
+```{r}
+library(visNetwork)
+got_nodes <- read_csv("data/GoT_nodes.csv")
+got_edges <- read_csv("data/GoT_edges.csv")
+
+superculture_colours <- tibble(
+  superculture = unique(got_nodes$superculture),
+  color = brewer.pal(12, "Paired")
+)
+
+got_nodes <- got_nodes %>%
+  left_join(superculture_colours)
+
+got_igraph <- graph_from_data_frame(
+  got_edges,
+  vertices = got_nodes,
+  directed = FALSE
+) %>%
+  simplify()
+
+got_igraph %>%
+  visIgraph() %>%
+  visOptions(highlightNearest = TRUE)
+
+```
+
